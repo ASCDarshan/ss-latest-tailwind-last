@@ -22,6 +22,7 @@ import {
   MultipleCheckboxChoiceQue,
 } from "../../utils/HTMLContent";
 import MultipleChoicesAnswer from "../../utils/HTMLContent/MultipleChoicesAnswer";
+import TidioChat from "../../tailwind_components/ChatBot/TidioChat";
 
 const Cheerio = require("cheerio");
 
@@ -902,9 +903,9 @@ const DragDrop = () => {
         <div className="theme__shadow__circle"></div>
         <div className="theme__shadow__circle shadow__right"></div>
         <div className="container-fluid full__width__padding">
-          <div className="d-flex">
-            <div>
-              <div className="box-left">
+          <div className="flex flex-col md:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+            <div className="md:w-1/3 bg-white p-4 rounded-lg shadow-md">
+              <div className="box-left space-y-2">
                 {[
                   { id: "header2", title: "Matching Headings" },
                   { id: "header3", title: "Locating Information" },
@@ -930,7 +931,7 @@ const DragDrop = () => {
                     {item.title}
                   </div>
                 ))}
-                <div className="d-flex gap-3 align-items-center justify-content-center">
+                <div className="flex gap-3 justify-center mt-4">
                   <button
                     className="btn btn-sm btn-danger"
                     onClick={handleReset}
@@ -946,82 +947,98 @@ const DragDrop = () => {
                 </div>
               </div>
             </div>
-            <div className="box-right">
-              {selectedDivs.map((header, index) => (
-                <div>
-                  <div key={index} className="header2Class">
-                    <div className="d-flex justify-content-between align-items-center">
-                      <h5>{header.type}</h5>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => handleDelete(header)}
-                      >
-                        <i className="icofont-ui-delete" />
-                      </button>
-                    </div>
-                    <div
-                      contentEditable
-                      dangerouslySetInnerHTML={{
-                        __html: header.passage,
-                      }}
-                      onBlur={(event) =>
-                        handleContentChange(event, header, index)
-                      }
-                    />
-                  </div>
-                  {header.type === "Multiple Questions" && (
-                    <div style={{ display: "flex", marginBottom: "20px" }}>
-                      <h5>Number Of Questions:</h5>
-                      <input
-                        type="number"
-                        value={questionStructure[index].numberOfQuestions}
-                        onChange={(e) =>
-                          handleNumberOfQuestionsChange(e, index)
+
+            <div className="md:w-2/3 bg-white p-4 rounded-lg shadow-md">
+              <div className="box-right space-y-4  md:w-1/3">
+                {selectedDivs.map((header, index) => (
+                  <div key={index}>
+                    <div className="header2Class">
+                      <div className="flex justify-between items-center mb-2">
+                        <h5>{header.type}</h5>
+                        <button
+                          className="btn btn-sm btn-danger"
+                          onClick={() => handleDelete(header)}
+                        >
+                          <i className="icofont-ui-delete" />
+                        </button>
+                      </div>
+                      <div
+                        contentEditable
+                        dangerouslySetInnerHTML={{
+                          __html: header.passage,
+                        }}
+                        onBlur={(event) =>
+                          handleContentChange(event, header, index)
                         }
-                        onBlur={() => handleNumberOfQuestionsChangeBlur(index)}
+                        className="border p-2 rounded"
                       />
                     </div>
-                  )}
-                </div>
-              ))}
+                    {header.type === "Multiple Questions" && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <h5>Number Of Questions:</h5>
+                        <input
+                          type="number"
+                          value={
+                            questionStructure[index]?.numberOfQuestions || 0
+                          }
+                          onChange={(e) =>
+                            handleNumberOfQuestionsChange(e, index)
+                          }
+                          onBlur={() =>
+                            handleNumberOfQuestionsChangeBlur(index)
+                          }
+                          className="w-20 border rounded p-1"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="col-xl-4 col-lg-4 col-md-12 col-12 box-right">
+
+            <div className="w-full md:w-1/3 bg-white p-4 rounded-lg shadow-md">
               {answer.map((answer, parentIndex) => (
-                <div className="row" key={parentIndex}>
-                  <h5>{answer.title}</h5>
-                  {answer.answers.map((item, childIndex) => (
-                    <div className="col-xl-8 col-lg-6 col-md-6 col-12">
-                      <div className="dashboard__form__wraper">
-                        <div className="dashboard__form__input">
-                          <label>Question No. {item.question_number}</label>
-                          <input
-                            type="text"
-                            placeholder="Answer"
-                            value={answer.answer_text}
-                            onChange={(e) =>
-                              handleAnswerChange(e, parentIndex, childIndex)
-                            }
-                            style={{
-                              borderColor: item.error === "" ? "" : "red",
-                            }}
-                          />
-                          {item.error !== "" && (
-                            <label style={{ color: "red" }}>Required</label>
-                          )}
+                <div key={parentIndex} className="mb-4">
+                  <h5 className="mb-2">{answer.title}</h5>
+                  <div className="grid grid-cols-1 gap-3">
+                    {answer.answers.map((item, childIndex) => (
+                      <div key={childIndex} className="w-full">
+                        <div className="dashboard__form__wraper">
+                          <div className="dashboard__form__input">
+                            <label>Question No. {item.question_number}</label>
+                            <input
+                              type="text"
+                              placeholder="Answer"
+                              value={answer.answer_text}
+                              onChange={(e) =>
+                                handleAnswerChange(e, parentIndex, childIndex)
+                              }
+                              className={`w-full border p-2 rounded ${
+                                item.error !== "" ? "border-red-500" : ""
+                              }`}
+                            />
+                            {item.error !== "" && (
+                              <label className="text-red-500 text-sm">
+                                Required
+                              </label>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               ))}
+
               {formStatus.isError ? (
-                <div className="text-danger mb-2">{formStatus.errMsg}</div>
+                <div className="text-red-500 mb-2">{formStatus.errMsg}</div>
               ) : (
-                <div className="text-success mb-2">{formStatus.errMsg}</div>
+                <div className="text-green-500 mb-2">{formStatus.errMsg}</div>
               )}
+
               {answer.length > 0 && (
                 <button
-                  className="default__button"
+                  className="default__button w-full py-2 rounded bg-blue-500 text-white hover:bg-blue-600"
                   disabled={formStatus.isSubmitting}
                   onClick={
                     listeningData.exam_type === "Listening"
@@ -1036,6 +1053,7 @@ const DragDrop = () => {
           </div>
         </div>
       </div>
+      <TidioChat />
     </div>
   );
 };

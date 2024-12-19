@@ -78,6 +78,9 @@ const Layout = () => {
     return location.pathname === path;
   };
 
+  const tidioRoutes = ["/"];
+  const showTidio = tidioRoutes.includes(location.pathname);
+
   return (
     <div className="flex flex-col min-h-screen bg-neutral-50">
       <nav className="sticky top-0 z-50">
@@ -359,7 +362,7 @@ const Layout = () => {
         </footer>
       )}
 
-      <TidioChat />
+      {showTidio && <TidioChat />}
     </div>
   );
 };
